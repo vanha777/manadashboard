@@ -41,6 +41,19 @@ const navConfig = [
   {
     subheader: 'general',
     items: [
+      // Upload
+      {
+        title: 'upload',
+        path: PATH_DASHBOARD.upload.root,
+        icon: ICONS.file,
+        children: [
+          { title: 'files', path: PATH_DASHBOARD.upload.files },
+          { title: 'patient', path: PATH_DASHBOARD.upload.patient },
+          { title: 'user', path: PATH_DASHBOARD.upload.user },
+        ],
+    
+      },
+      //Upload end.
       { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
       { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
