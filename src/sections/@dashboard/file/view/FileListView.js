@@ -41,6 +41,7 @@ export default function FileListView({
   onDeleteRow,
   dataFiltered,
   onOpenConfirm,
+  onOpenUpload,
 }) {
   const {
     dense,
@@ -76,9 +77,10 @@ export default function FileListView({
           }
           action={
             <>
-              <Tooltip title="Share">
-                <IconButton color="primary">
-                  <Iconify icon="eva:share-fill" />
+
+              <Tooltip title="Upload">
+                <IconButton color="primary" onClick={onOpenUpload}>
+                  <Iconify icon="eva:cloud-upload-fill" />
                 </IconButton>
               </Tooltip>
 

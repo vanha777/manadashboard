@@ -22,7 +22,7 @@ FileGridView.propTypes = {
   onOpenConfirm: PropTypes.func,
 };
 
-export default function FileGridView({ table, data, dataFiltered, onDeleteItem, onOpenConfirm }) {
+export default function FileGridView({ table, data, dataFiltered, onDeleteItem, onOpenConfirm,onOpenUpload }) {
   const { selected, onSelectRow: onSelectItem, onSelectAllRows: onSelectAllItems } = table;
 
   const containerRef = useRef(null);
@@ -31,7 +31,7 @@ export default function FileGridView({ table, data, dataFiltered, onDeleteItem, 
 
   const [inviteEmail, setInviteEmail] = useState('');
 
-  const [openShare, setOpenShare] = useState(false);
+  const [openUpload, setOpenUpload] = useState(false);
 
   const [collapseFiles, setCollapseFiles] = useState(false);
 
@@ -41,12 +41,12 @@ export default function FileGridView({ table, data, dataFiltered, onDeleteItem, 
 
   const [collapseFolders, setCollapseFolders] = useState(false);
 
-  const handleOpenShare = () => {
-    setOpenShare(true);
+  const handleOpenUpload = () => {
+    setOpenUpload(true);
   };
 
-  const handleCloseShare = () => {
-    setOpenShare(false);
+  const handleCloseUpload = () => {
+    setOpenUpload(false);
   };
 
   const handleOpenNewFolder = () => {
@@ -170,8 +170,8 @@ export default function FileGridView({ table, data, dataFiltered, onDeleteItem, 
                   color="inherit"
                   size="small"
                   variant="contained"
-                  startIcon={<Iconify icon="eva:share-fill" />}
-                  onClick={handleOpenShare}
+                  startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+                  onClick={handleOpenUpload}
                   sx={{
                     color: (theme) =>
                       theme.palette.mode === 'light' ? 'grey.800' : 'common.white',
@@ -185,7 +185,7 @@ export default function FileGridView({ table, data, dataFiltered, onDeleteItem, 
                     },
                   }}
                 >
-                  Share
+                  Upload
                 </Button>
               </>
             }
@@ -194,11 +194,11 @@ export default function FileGridView({ table, data, dataFiltered, onDeleteItem, 
       </Box>
 
       <FileShareDialog
-        open={openShare}
+        open={openUpload}
         inviteEmail={inviteEmail}
         onChangeInvite={handleChangeInvite}
         onClose={() => {
-          handleCloseShare();
+          handleCloseUpload();
           setInviteEmail('');
         }}
       />

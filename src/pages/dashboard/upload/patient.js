@@ -82,6 +82,10 @@ export default function UploadPatientPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
+  //upload
+  const [openUpload, setOpenUpload] = useState(false);
+  //end.
+
   const [openUploadFile, setOpenUploadFile] = useState(false);
 
   const dataFiltered = applyFilter({
@@ -166,7 +170,26 @@ export default function UploadPatientPage() {
       }
     }
   };
+  //upload
+  const handleUploadItems = (selected) => {
+    console.log("this is upload to kraken");
+    const { page, rowsPerPage, setPage, setSelected } = table;
+    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+    setSelected([]);
+    setTableData(deleteRows);
 
+    if (page > 0) {
+      if (selected.length === dataInPage.length) {
+        setPage(page - 1);
+      } else if (selected.length === dataFiltered.length) {
+        setPage(0);
+      } else if (selected.length > dataInPage.length) {
+        const newPage = Math.ceil((tableData.length - selected.length) / rowsPerPage) - 1;
+        setPage(newPage);
+      }
+    }
+  };
+//end.
   const handleClearAll = () => {
     if (onResetPicker) {
       onResetPicker();
@@ -175,6 +198,15 @@ export default function UploadPatientPage() {
     setFilterType([]);
   };
 
+  //upload file
+  const handleOpenUpload = () => {
+    setOpenUpload(true);
+  };
+
+  const handleCloseUpload = () => {
+    setOpenUpload(false);
+  };
+//end.
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -217,7 +249,7 @@ export default function UploadPatientPage() {
               startIcon={<Iconify icon="eva:cloud-upload-fill" />}
               onClick={handleOpenUploadFile}
             >
-              Upload
+              Add File
             </Button>
           }
         />
@@ -291,6 +323,7 @@ export default function UploadPatientPage() {
             onDeleteRow={handleDeleteItem}
             isNotFound={isNotFound}
             onOpenConfirm={handleOpenConfirm}
+            onOpenUpload={handleOpenUpload}
           />
         ) : (
           <FileGridView
@@ -299,6 +332,7 @@ export default function UploadPatientPage() {
             dataFiltered={dataFiltered}
             onDeleteItem={handleDeleteItem}
             onOpenConfirm={handleOpenConfirm}
+            onOpenUpload={handleOpenUpload}
           />
         )}
       </Container>
@@ -327,6 +361,30 @@ export default function UploadPatientPage() {
           </Button>
         }
       />
+
+<ConfirmDialog
+        open={openUpload}
+        onClose={handleCloseUpload}
+        title="Upload"
+        content={
+          <>
+            Are you sure want to upload <strong> {table.selected.length} </strong> items?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              handleUploadItems(table.selected);
+              handleCloseUpload();
+            }}
+          >
+            Upload
+          </Button>
+        }
+      />
+
     </>
   );
 }
