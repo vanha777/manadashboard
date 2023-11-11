@@ -118,12 +118,12 @@ export function AuthProvider({ children }) {
       location_id,
       temp_access_token
     });
-    const { access_token, first_name, last_name } = response.data;
+    const { access_token, first_name, last_name,role } = response.data;
     const user = first_name + ' ' + last_name;
     console.log('this is user', user);
     console.log('This is accessToken:', access_token);
 
-    setSession(access_token);
+    setSession(access_token,location_id,role);
 
     dispatch({
       type: 'LOGIN',

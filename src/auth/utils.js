@@ -58,25 +58,34 @@ export const tokenExpired = (exp) => {
 
 // ----------------------------------------------------------------------
 
-export const setSession = (accessToken) => {
+export const setSession = (accessToken, location_id, role) => {
   if (accessToken) {
     localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('location_id', location_id);
+    localStorage.setItem('role', JSON.stringify(role));
 
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    axios.defaults.headers.common['Location'] = `${location_id}`;
 
     // This function below will handle when token is expired
     const { exp } = jwtDecode(accessToken); // ~3 days by minimals server
     tokenExpired(exp);
   } else {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('location_id');
+    localStorage.removeItem('role');
+    localStorage.removeItem('temp_access_token');
+    localStorage.removeItem('locations');
 
     delete axios.defaults.headers.common.Authorization;
+    delete axios.defaults.headers.common['Location'];
+
   }
 };
 
 // ----------------------------------------------------------------------
 
-export const setLocation = (locations,temp_access_token) => {
+export const setLocation = (locations, temp_access_token) => {
   if (locations) {
     localStorage.setItem('locations', JSON.stringify(locations));
     localStorage.setItem('temp_access_token', temp_access_token);
@@ -90,6 +99,6 @@ export const setLocation = (locations,temp_access_token) => {
   } else {
     localStorage.removeItem('locations');
 
-   // delete axios.defaults.headers.common.Authorization;
+    // delete axios.defaults.headers.common.Authorization;
   }
 };
