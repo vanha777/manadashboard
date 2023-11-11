@@ -73,3 +73,23 @@ export const setSession = (accessToken) => {
     delete axios.defaults.headers.common.Authorization;
   }
 };
+
+// ----------------------------------------------------------------------
+
+export const setLocation = (locations,temp_access_token) => {
+  if (locations) {
+    localStorage.setItem('locations', JSON.stringify(locations));
+    localStorage.setItem('temp_access_token', temp_access_token);
+
+    //axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+    // This function below will handle when token is expired
+    const { exp } = jwtDecode(temp_access_token); // ~3 days by minimals server
+    tokenExpired(exp);
+
+  } else {
+    localStorage.removeItem('locations');
+
+   // delete axios.defaults.headers.common.Authorization;
+  }
+};

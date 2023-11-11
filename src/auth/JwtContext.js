@@ -4,7 +4,7 @@ import { createContext, useEffect, useReducer, useCallback, useMemo } from 'reac
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
-import { isValidToken, setSession } from './utils';
+import { isValidToken, setSession, setLocation } from './utils';
 
 // ----------------------------------------------------------------------
 
@@ -112,15 +112,18 @@ export function AuthProvider({ children }) {
   }, [initialize]);
 
   // LOGIN
-  const login = useCallback(async (email, password) => {
-    console.log(`this is mine email: ${email} and password ${password}`)
-    const response = await axios.post('/login', {
-      email,
-      password,
+  const login = useCallback(async (location_id, temp_access_token) => {
+    console.log(`this is mine selected: ${location_id} and token ${temp_access_token}`);
+    const response = await axios.post('/login/location-select', {
+      location_id,
+      temp_access_token
     });
-    const { accessToken, user } = response.data;
+    const { access_token, first_name, last_name } = response.data;
+    const user = first_name + ' ' + last_name;
+    console.log('this is user', user);
+    console.log('This is accessToken:', access_token);
 
-    setSession(accessToken);
+    setSession(access_token);
 
     dispatch({
       type: 'LOGIN',
@@ -128,6 +131,31 @@ export function AuthProvider({ children }) {
         user,
       },
     });
+  }, []);
+
+  // GET LOCATION
+  const getLocation = useCallback(async (name, password, company_id) => {
+    console.log(`this is mine email: ${name} and password ${password} and password ${company_id}`)
+    const response = await axios.post('/login', {
+      name,
+      password,
+      company_id
+    });
+    const user = name;
+    const { temp_access_token, locations } = response.data;
+    console.log('this is user', user);
+    console.log('This is temp_token and Locations:', locations, temp_access_token);
+
+
+    setLocation(locations, temp_access_token);
+    /*
+        dispatch({
+          type: 'LOGIN',
+          payload: {
+            user,
+          },
+        });
+        */
   }, []);
 
   // REGISTER
@@ -165,10 +193,11 @@ export function AuthProvider({ children }) {
       user: state.user,
       method: 'jwt',
       login,
+      getLocation,
       register,
       logout,
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, login, logout, register]
+    [state.isAuthenticated, state.isInitialized, state.user, login, getLocation, logout, register]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

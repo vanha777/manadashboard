@@ -16,21 +16,29 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Controller } from 'react-hook-form';
+
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
-  const { login } = useAuthContext();
+  const { getLocation, login } = useAuthContext();
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [locations, setLocations] = useState();
+
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    company_id: Yup.string().required('Company ID is required'),
+    name: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    company_id: '87af043d-74b0-4bb4-82d8-ec418462e107',
+    name: 'valeshan.naidoo@strongroom.ai',
+    password: 'pword',
+    location_id: ''
   };
 
   const methods = useForm({
@@ -47,7 +55,37 @@ export default function AuthLoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
+      await getLocation(data.name, data.password, data.company_id);
+    } catch (error) {
+      console.error(error);
+      reset();
+      setError('afterSubmit', {
+        ...error,
+        message: error.message || error,
+      });
+    }
+    // After successful login, check for 'locations' again
+    const location_id = localStorage.getItem('locations');
+
+    if (location_id) {
+
+      const parsedLocations = JSON.parse(location_id);
+      console.log('this is locations', parsedLocations);
+      setLocations(parsedLocations);
+      console.log("Detect Locations");
+
+    } else {
+      console.error("No Locations Detected");
+      reset();
+      // Handle the case where locations are not yet set
+    }
+  };
+
+  const onLogin = async (data) => {
+    try {
+      const temp_access_token = localStorage.getItem('temp_access_token');
+      console.log('this is selected location', data.location_id);
+      await login(data.location_id, temp_access_token);
     } catch (error) {
       console.error(error);
       reset();
@@ -58,12 +96,68 @@ export default function AuthLoginForm() {
     }
   };
 
+
+  if (locations) {
+    console.log('this is state locations', locations);
+    // Render alternative component if locations array is not empty
+    return (
+      <FormProvider methods={methods} onSubmit={handleSubmit(onLogin)}>
+
+        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+
+        <FormControl fullWidth>
+          <InputLabel id="location-label">Location</InputLabel>
+          <Controller
+            name="location_id"
+            control={methods.control}
+            render={({ field }) => (
+              <Select
+                labelId="location-label"
+                label="Location"
+                {...field}
+                defaultValue="" // Set a default value
+              >
+                {Array.isArray(locations) && locations.length > 0 ? (
+                  locations.map((location, index) => (
+                    <MenuItem key={index} value={location.uuid}>{location.name}</MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled>No locations available</MenuItem>
+                )}
+              </Select>
+            )}
+          />
+        </FormControl>
+
+        <LoadingButton
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          //loading={isSubmitSuccessful || isSubmitting}
+          sx={{
+            bgcolor: 'text.primary',
+            color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
+            '&:hover': {
+              bgcolor: 'text.primary',
+              color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
+            },
+          }}
+        >
+          Select
+        </LoadingButton>
+      </FormProvider>
+    );
+  }
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="company_id" label="Company ID" />
+
+        <RHFTextField name="name" label="Email address" />
 
         <RHFTextField
           name="password"
@@ -113,6 +207,6 @@ export default function AuthLoginForm() {
       </LoadingButton>
     </FormProvider>
 
-    
+
   );
 }

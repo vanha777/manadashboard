@@ -3,7 +3,8 @@ module.exports = {
   trailingSlash: true,
   env: {
     // HOST
-    HOST_API_KEY: 'https://staging.strongroom.ai',
+   // HOST_API_KEY: 'https://staging.strongroom.ai',
+   HOST_API_KEY: 'http://localhost:3030',
     // MAPBOX
     MAPBOX_API: '',
     // FIREBASE
