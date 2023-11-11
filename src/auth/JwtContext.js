@@ -113,7 +113,8 @@ export function AuthProvider({ children }) {
 
   // LOGIN
   const login = useCallback(async (email, password) => {
-    const response = await axios.post('/api/account/login', {
+    console.log(`this is mine email: ${email} and password ${password}`)
+    const response = await axios.post('/login', {
       email,
       password,
     });
