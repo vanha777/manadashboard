@@ -59,7 +59,9 @@ export default function FileDetailsDrawer({
 
   const [inviteEmail, setInviteEmail] = useState('');
 
-  const [tags, setTags] = useState(item.tags.slice(0, 3));
+  //const [tags, setTags] = useState(item.tags.slice(0, 3));
+
+  const [tags, setTags] =  useState(item.tags ? item.tags.slice(0, 3) : []);
 
   const [toggleProperties, setToggleProperties] = useState(true);
 

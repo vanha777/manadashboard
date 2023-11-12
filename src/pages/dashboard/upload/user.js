@@ -30,6 +30,9 @@ import {
   FileNewFolderDialog,
 } from '../../../sections/@dashboard/file';
 
+// utils
+import axios from '../../../utils/axios';
+
 // ----------------------------------------------------------------------
 
 const FILE_TYPE_OPTIONS = [
@@ -76,11 +79,16 @@ export default function UploadUserPage() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [tableData, setTableData] = useState(_allFiles);
+  //const [tableData, setTableData] = useState(_allFiles);
+  const [tableData, setTableData] = useState([]);
 
   const [filterType, setFilterType] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
+
+  //upload
+  const [openUpload, setOpenUpload] = useState(false);
+  //end.
 
   const [openUploadFile, setOpenUploadFile] = useState(false);
 
@@ -167,6 +175,53 @@ export default function UploadUserPage() {
     }
   };
 
+  //upload
+  const handleUploadItems = (selected) => {
+    const { page, rowsPerPage, setPage, setSelected } = table;
+    const selectedFiles = tableData.filter((row) => selected.includes(row.id));
+    //setloading
+    setSelected([]);
+    //handleOpenUpload
+    //setTableData(deleteRows);
+    console.log('this is upload to kraken', selectedFiles);
+
+    const formData = new FormData();
+    selectedFiles.forEach((selectedFile, index) => {
+      // Append each file object to the FormData
+      // The 'files[]' is the name of the form field that your server expects
+      // Modify it according to your server's requirements
+      //formData.append(`[${selectedFile.name}]`, selectedFile.file);
+      formData.append(`[${selectedFile.name}]`, selectedFile.file);
+    });
+
+    console.log('this is what is sent', formData);
+
+    axios.post("/api/upload-user", formData)
+    .then(response => {
+      console.log('Upload successful', response.data);
+    })
+    .catch(error => {
+      // set error
+      console.error('Upload failed', error);
+    });
+
+    /*
+        if (page > 0) {
+           console.log('selected file')
+          if (selected.length === dataInPage.length) {
+            setPage(page - 1);
+          } else if (selected.length === dataFiltered.length) {
+            setPage(0);
+          } else if (selected.length > dataInPage.length) {
+            const newPage = Math.ceil((tableData.length - selected.length) / rowsPerPage) - 1;
+            setPage(newPage);
+          }
+        }
+    */
+
+  };
+  //end.
+
   const handleClearAll = () => {
     if (onResetPicker) {
       onResetPicker();
@@ -174,6 +229,16 @@ export default function UploadUserPage() {
     setFilterName('');
     setFilterType([]);
   };
+
+  //upload file
+  const handleOpenUpload = () => {
+    setOpenUpload(true);
+  };
+
+  const handleCloseUpload = () => {
+    setOpenUpload(false);
+  };
+  //end.
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -217,7 +282,7 @@ export default function UploadUserPage() {
               startIcon={<Iconify icon="eva:cloud-upload-fill" />}
               onClick={handleOpenUploadFile}
             >
-              Upload
+              Add File
             </Button>
           }
         />
@@ -291,6 +356,7 @@ export default function UploadUserPage() {
             onDeleteRow={handleDeleteItem}
             isNotFound={isNotFound}
             onOpenConfirm={handleOpenConfirm}
+            onOpenUpload={handleOpenUpload}
           />
         ) : (
           <FileGridView
@@ -299,11 +365,12 @@ export default function UploadUserPage() {
             dataFiltered={dataFiltered}
             onDeleteItem={handleDeleteItem}
             onOpenConfirm={handleOpenConfirm}
+            onOpenUpload={handleOpenUpload}
           />
         )}
       </Container>
 
-      <FileNewFolderDialog open={openUploadFile} onClose={handleCloseUploadFile} />
+      <FileNewFolderDialog open={openUploadFile} onClose={handleCloseUploadFile} tableData={tableData} setTableData={setTableData} />
 
       <ConfirmDialog
         open={openConfirm}
@@ -327,6 +394,30 @@ export default function UploadUserPage() {
           </Button>
         }
       />
+
+      <ConfirmDialog
+        open={openUpload}
+        onClose={handleCloseUpload}
+        title="Upload"
+        content={
+          <>
+            Are you sure want to upload <strong> {table.selected.length} </strong> items?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              handleUploadItems(table.selected);
+              handleCloseUpload();
+            }}
+          >
+            Upload
+          </Button>
+        }
+      />
+
     </>
   );
 }

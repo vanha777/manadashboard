@@ -30,6 +30,9 @@ import {
   FileNewFolderDialog,
 } from '../../../sections/@dashboard/file';
 
+// utils
+import axios from '../../../utils/axios';
+
 // ----------------------------------------------------------------------
 
 const FILE_TYPE_OPTIONS = [
@@ -76,7 +79,9 @@ export default function UploadPatientPage() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [tableData, setTableData] = useState(_allFiles);
+  //const [tableData, setTableData] = useState(_allFiles);
+
+  const [tableData, setTableData] = useState([]);
 
   const [filterType, setFilterType] = useState([]);
 
@@ -170,26 +175,54 @@ export default function UploadPatientPage() {
       }
     }
   };
+
   //upload
   const handleUploadItems = (selected) => {
-    console.log("this is upload to kraken");
     const { page, rowsPerPage, setPage, setSelected } = table;
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+    const selectedFiles = tableData.filter((row) => selected.includes(row.id));
+    //setloading
     setSelected([]);
-    setTableData(deleteRows);
+    //handleOpenUpload
+    //setTableData(deleteRows);
+    console.log('this is upload to kraken', selectedFiles);
 
-    if (page > 0) {
-      if (selected.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selected.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selected.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selected.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
+    const formData = new FormData();
+    selectedFiles.forEach((selectedFile, index) => {
+      // Append each file object to the FormData
+      // The 'files[]' is the name of the form field that your server expects
+      // Modify it according to your server's requirements
+      //formData.append(`[${selectedFile.name}]`, selectedFile.file);
+      formData.append(`[${selectedFile.name}]`, selectedFile.file);
+    });
+
+    console.log('this is what is sent', formData);
+
+    axios.post("/api/upload-patient", formData)
+    .then(response => {
+      console.log('Upload successful', response.data);
+    })
+    .catch(error => {
+      // set error
+      console.error('Upload failed', error);
+    });
+
+    /*
+        if (page > 0) {
+           console.log('selected file')
+          if (selected.length === dataInPage.length) {
+            setPage(page - 1);
+          } else if (selected.length === dataFiltered.length) {
+            setPage(0);
+          } else if (selected.length > dataInPage.length) {
+            const newPage = Math.ceil((tableData.length - selected.length) / rowsPerPage) - 1;
+            setPage(newPage);
+          }
+        }
+    */
+
   };
-//end.
+  //end.
+
   const handleClearAll = () => {
     if (onResetPicker) {
       onResetPicker();
@@ -206,7 +239,8 @@ export default function UploadPatientPage() {
   const handleCloseUpload = () => {
     setOpenUpload(false);
   };
-//end.
+  //end.
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -337,7 +371,7 @@ export default function UploadPatientPage() {
         )}
       </Container>
 
-      <FileNewFolderDialog open={openUploadFile} onClose={handleCloseUploadFile} />
+      <FileNewFolderDialog open={openUploadFile} onClose={handleCloseUploadFile} tableData={tableData} setTableData={setTableData} />
 
       <ConfirmDialog
         open={openConfirm}
@@ -362,7 +396,7 @@ export default function UploadPatientPage() {
         }
       />
 
-<ConfirmDialog
+      <ConfirmDialog
         open={openUpload}
         onClose={handleCloseUpload}
         title="Upload"

@@ -14,6 +14,8 @@ import {
 import Iconify from '../../../../components/iconify';
 import { Upload } from '../../../../components/upload';
 
+import mime from 'mime-types';
+
 // ----------------------------------------------------------------------
 
 FileNewFolderDialog.propTypes = {
@@ -30,6 +32,9 @@ export default function FileNewFolderDialog({
   title = 'Upload Files',
   open,
   onClose,
+  //
+  tableData,
+  setTableData,
   //
   onCreate,
   onUpdate,
@@ -60,8 +65,29 @@ export default function FileNewFolderDialog({
   );
 
   const handleUpload = () => {
+    console.log('ON UPLOAD this is file that you added', files);
+    //need to cretes same data structure
+    const transformedArray = files.map((file, index) => ({
+      //id: `file_${index}`, // Generate a unique id for each file, for example
+      id: `${Math.random().toString(36).substr(2, 9)}_${file.name}`, // More unique ID
+      name: file.name,
+      name: file.name,
+      size: file.size,
+      dateCreated: new Date(), // Current date, modify as needed
+      //dateModified: new Date(file.lastModified),
+      dateModified: new Date(),
+      isFavorited: false, // Set default value, modify as needed
+      shared: [], // Array of shared details, add as needed
+      tags: ["Docs", "Projects", "Work", "Training", "Sport", "Foods"], // Example tags, modify as needed
+      totalFiles: 1, // Assuming each file is a single file, modify as needed
+      type: mime.extension(file.type) || "unknown",
+      url: file.preview,
+      file: file, // Keep a reference to the original File object
+    }));
+    setTableData(prevTableData => [...prevTableData, ...transformedArray]);
+    // console.log('ON UPLOAD this is table Date', tableData);
+    console.log('ON UPLOAD this is transform array', transformedArray);
     onClose();
-    console.log('ON UPLOAD');
   };
 
   const handleRemoveFile = (inputFile) => {

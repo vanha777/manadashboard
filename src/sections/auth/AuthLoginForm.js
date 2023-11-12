@@ -19,6 +19,9 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { Controller } from 'react-hook-form';
 
+import Box from '@mui/material/Box';
+
+
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
@@ -72,7 +75,6 @@ export default function AuthLoginForm() {
       const parsedLocations = JSON.parse(location_id);
       console.log('this is locations', parsedLocations);
       setLocations(parsedLocations);
-      console.log("Detect Locations");
 
     } else {
       console.error("No Locations Detected");
@@ -81,6 +83,18 @@ export default function AuthLoginForm() {
     }
   };
 
+  const methods2 = useForm({
+    resolver: yupResolver(LoginSchema),
+    defaultValues,
+  });
+
+  const {
+    reset:reset2,
+    setError:setError2,
+    handleSubmit: handleSubmit2,
+    formState: { errors:errors2, isSubmitting: isSubmitting2, isSubmitSuccessful: isSubmitSuccessful2 },
+  } = methods2;
+
   const onLogin = async (data) => {
     try {
       const temp_access_token = localStorage.getItem('temp_access_token');
@@ -88,8 +102,8 @@ export default function AuthLoginForm() {
       await login(data.location_id, temp_access_token);
     } catch (error) {
       console.error(error);
-      reset();
-      setError('afterSubmit', {
+      reset2();
+      setError2('afterSubmit', {
         ...error,
         message: error.message || error,
       });
@@ -101,33 +115,38 @@ export default function AuthLoginForm() {
     console.log('this is state locations', locations);
     // Render alternative component if locations array is not empty
     return (
-      <FormProvider methods={methods} onSubmit={handleSubmit(onLogin)}>
+      <FormProvider methods={methods2} onSubmit={handleSubmit2(onLogin)}>
+        <Stack spacing={1}>
 
-        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+          {!!errors2.afterSubmit && <Alert severity="error">{errors2.afterSubmit.message}</Alert>}
 
-        <FormControl fullWidth>
-          <InputLabel id="location-label">Location</InputLabel>
-          <Controller
-            name="location_id"
-            control={methods.control}
-            render={({ field }) => (
-              <Select
-                labelId="location-label"
-                label="Location"
-                {...field}
-                defaultValue="" // Set a default value
-              >
-                {Array.isArray(locations) && locations.length > 0 ? (
-                  locations.map((location, index) => (
-                    <MenuItem key={index} value={location.uuid}>{location.name}</MenuItem>
-                  ))
-                ) : (
-                  <MenuItem disabled>No locations available</MenuItem>
-                )}
-              </Select>
-            )}
-          />
-        </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="location-label">Location</InputLabel>
+            <Controller
+              name="location_id"
+              control={methods2.control}
+              render={({ field }) => (
+                <Select
+                  labelId="location-label"
+                  label="Location"
+                  {...field}
+                  defaultValue="" // Set a default value
+                >
+                  {Array.isArray(locations) && locations.length > 0 ? (
+                    locations.map((location, index) => (
+                      <MenuItem key={index} value={location.uuid}>{location.name}</MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>No locations available</MenuItem>
+                  )}
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Stack>
+
+        {/* Spacer element */}
+        <Box sx={{ height: 24 }}></Box>
 
         <LoadingButton
           fullWidth
@@ -135,7 +154,7 @@ export default function AuthLoginForm() {
           size="large"
           type="submit"
           variant="contained"
-          //loading={isSubmitSuccessful || isSubmitting}
+          loading={isSubmitSuccessful2 || isSubmitting2}
           sx={{
             bgcolor: 'text.primary',
             color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
