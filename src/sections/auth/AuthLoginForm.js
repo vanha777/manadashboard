@@ -38,9 +38,9 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    company_id: '87af043d-74b0-4bb4-82d8-ec418462e107',
+    company_id: '31a92ddc-4d35-4ec5-b115-436362077593',
     name: 'valeshan.naidoo@strongroom.ai',
-    password: 'pword',
+    password: 'strongroompassword',
     location_id: ''
   };
 

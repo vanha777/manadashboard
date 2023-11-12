@@ -3,8 +3,8 @@ module.exports = {
   trailingSlash: true,
   env: {
     // HOST
-   // HOST_API_KEY: 'https://staging.strongroom.ai',
-   HOST_API_KEY: 'http://localhost:3030',
+    HOST_API_KEY: 'https://staging.strongroom.ai',
+    //HOST_API_KEY: 'http://localhost:3030',
     // MAPBOX
     MAPBOX_API: '',
     // FIREBASE
@@ -21,5 +21,14 @@ module.exports = {
     // AUTH0
     AUTH0_DOMAIN: '',
     AUTH0_CLIENT_ID: '',
+  },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/dashboard/app',
+        permanent: true, // Change to false if you want temporary redirect
+      },
+    ];
   },
 };

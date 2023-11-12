@@ -41,7 +41,7 @@ export default function Login() {
       </Stack>
 
       <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>Integrations@strongroom.ai</strong> / password :<strong> strongroomAi</strong>
+        Use email : <strong>Anythings@strongroom.ai</strong>  password :<strong> NotReally</strong>
       </Alert>
 
       <AuthLoginForm />
