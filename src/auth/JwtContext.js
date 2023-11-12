@@ -119,6 +119,7 @@ export function AuthProvider({ children }) {
       temp_access_token
     });
     const { access_token, first_name, last_name,role } = response.data;
+    
     const user = {
       about: "🎩 So, next time your data syncs like a beautiful symphony, or your apps talk to each other in perfect harmony, remember the Integration Team - working in the shadows, coding with capes, and ensuring that in the digital realm of StrongroomAI, everything just... clicks!.",
       address: "123 Unicorn Way",

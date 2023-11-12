@@ -33,6 +33,12 @@ import {
 // utils
 import axios from '../../../utils/axios';
 
+import LoadingButton from '@mui/lab/LoadingButton';
+import Typography from '@mui/material/Typography';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
+
+
 // ----------------------------------------------------------------------
 
 const FILE_TYPE_OPTIONS = [
@@ -89,6 +95,10 @@ export default function UploadPatientPage() {
 
   //upload
   const [openUpload, setOpenUpload] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [dialogContent, setDialogContent] = useState(`Are you sure want to upload to StrongroomAi Databases?`);
   //end.
 
   const [openUploadFile, setOpenUploadFile] = useState(false);
@@ -178,10 +188,9 @@ export default function UploadPatientPage() {
 
   //upload
   const handleUploadItems = (selected) => {
+    setIsLoading(true);
     const { page, rowsPerPage, setPage, setSelected } = table;
     const selectedFiles = tableData.filter((row) => selected.includes(row.id));
-    //setloading
-    setSelected([]);
     //handleOpenUpload
     //setTableData(deleteRows);
     console.log('this is upload to kraken', selectedFiles);
@@ -198,13 +207,47 @@ export default function UploadPatientPage() {
     console.log('this is what is sent', formData);
 
     axios.post("/api/upload-patient", formData)
-    .then(response => {
-      console.log('Upload successful', response.data);
-    })
-    .catch(error => {
-      // set error
-      console.error('Upload failed', error);
-    });
+      .then(response => {
+        setSelected([]);
+
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+
+        setDialogContent(
+          <>
+            <CheckCircleIcon color="success" sx={{ fontSize: 40 }} />
+            <Typography variant="h5" component="div" sx={{ mt: 2 }}>
+              Hooray! Upload successful!
+            </Typography>
+          </>
+        );
+
+        console.log('Upload successful', response.data);
+      })
+      .catch(error => {
+        // set error
+
+        console.error('Upload failed', error);
+
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+
+        setDialogContent(
+          <>
+            <ErrorIcon color="error" sx={{ fontSize: 40 }} />
+            <Typography variant="h5" component="div" sx={{ mt: 2, color: 'error.main' }}>
+              Oops! Something went wrong.
+            </Typography>
+            {/* Optionally, include error details */}
+            <Typography variant="subtitle1" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          </>
+        );
+
+      });
 
     /*
         if (page > 0) {
@@ -400,22 +443,19 @@ export default function UploadPatientPage() {
         open={openUpload}
         onClose={handleCloseUpload}
         title="Upload"
-        content={
-          <>
-            Are you sure want to upload <strong> {table.selected.length} </strong> items?
-          </>
-        }
+        content={<>{dialogContent}</>}
         action={
-          <Button
+          <LoadingButton
             variant="contained"
             color="success"
             onClick={() => {
               handleUploadItems(table.selected);
-              handleCloseUpload();
+              //handleCloseUpload();
             }}
+            loading={isLoading}
           >
             Upload
-          </Button>
+          </LoadingButton>
         }
       />
 
