@@ -119,7 +119,23 @@ export function AuthProvider({ children }) {
       temp_access_token
     });
     const { access_token, first_name, last_name,role } = response.data;
-    const user = first_name + ' ' + last_name;
+    const user = {
+      about: "🎩 So, next time your data syncs like a beautiful symphony, or your apps talk to each other in perfect harmony, remember the Integration Team - working in the shadows, coding with capes, and ensuring that in the digital realm of StrongroomAI, everything just... clicks!.",
+      address: "123 Unicorn Way",
+      city: "Giggleville",
+      country: "Australia",
+      displayName: first_name + ' ' + last_name,
+      email: "integrations@strongroom.ai",
+      id: "8864c717-587d-472a-929a-8e5f298024da-0",
+      isPublic: true,
+      password: "pword",
+      phoneNumber: "+40 777666555",
+      photoURL: "https://api-dev-minimal-v4.vercel.app/assets/images/avatars/avatar_default.jpg",
+      role: "admin",
+      state: "Laughterland",
+      zipCode: "90210"
+  };  
+
     console.log('this is user', user);
     console.log('This is accessToken:', access_token);
 

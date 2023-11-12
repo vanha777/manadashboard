@@ -39,7 +39,7 @@ const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'general',
+    subheader: 'Main Menu',
     items: [
       // Upload
       {
@@ -54,23 +54,24 @@ const navConfig = [
     
       },
       //Upload end.
-      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-      { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-      { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
-      { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
+
     ],
   },
 
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
-    subheader: 'management',
+    subheader: 'Experiment',
     items: [
+      { title: 'experiment-1', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      { title: 'experiment-2', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+      { title: 'experiment-3', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      { title: 'experiment-4', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
+      { title: 'experiment-5', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+      { title: 'experiment-6', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
       // USER
       {
-        title: 'user',
+        title: 'experiment-7',
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
@@ -85,7 +86,7 @@ const navConfig = [
 
       // E-COMMERCE
       {
-        title: 'ecommerce',
+        title: 'experiment-8',
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.cart,
         children: [
@@ -100,7 +101,7 @@ const navConfig = [
 
       // INVOICE
       {
-        title: 'invoice',
+        title: 'experiment-9',
         path: PATH_DASHBOARD.invoice.root,
         icon: ICONS.invoice,
         children: [
@@ -113,7 +114,7 @@ const navConfig = [
 
       // BLOG
       {
-        title: 'blog',
+        title: 'experiment-10',
         path: PATH_DASHBOARD.blog.root,
         icon: ICONS.blog,
         children: [
@@ -123,7 +124,7 @@ const navConfig = [
         ],
       },
       {
-        title: 'File manager',
+        title: 'experiment-11',
         path: PATH_DASHBOARD.fileManager,
         icon: ICONS.folder,
       },
@@ -133,26 +134,26 @@ const navConfig = [
   // APP
   // ----------------------------------------------------------------------
   {
-    subheader: 'app',
+    subheader: 'Experiment',
     items: [
       {
-        title: 'mail',
+        title: 'experiment-12',
         path: PATH_DASHBOARD.mail.root,
         icon: ICONS.mail,
         info: <Label color="error">+32</Label>,
       },
       {
-        title: 'chat',
+        title: 'experiment-13',
         path: PATH_DASHBOARD.chat.root,
         icon: ICONS.chat,
       },
       {
-        title: 'calendar',
+        title: 'experiment-14',
         path: PATH_DASHBOARD.calendar,
         icon: ICONS.calendar,
       },
       {
-        title: 'kanban',
+        title: 'experiment-15',
         path: PATH_DASHBOARD.kanban,
         icon: ICONS.kanban,
       },
@@ -161,7 +162,7 @@ const navConfig = [
 
   // DEMO MENU STATES
   {
-    subheader: 'Other cases',
+    subheader: 'Experiment',
     items: [
       {
         // default roles : All roles can see this entry.
@@ -169,14 +170,14 @@ const navConfig = [
         // roles: ['admin'] Only admin can see this item.
         // roles: ['admin', 'manager'] Only admin/manager can see this item.
         // Reference from 'src/guards/RoleBasedGuard'.
-        title: 'item_by_roles',
+        title: 'experiment-16',
         path: PATH_DASHBOARD.permissionDenied,
         icon: ICONS.lock,
         roles: ['admin'],
         caption: 'only_admin_can_see_this_item',
       },
       {
-        title: 'menu_level',
+        title: 'experiment-17',
         path: '#/dashboard/menu_level',
         icon: ICONS.menuItem,
         children: [
@@ -211,14 +212,14 @@ const navConfig = [
         ],
       },
       {
-        title: 'item_disabled',
+        title: 'experiment-18',
         path: '#disabled',
         icon: ICONS.disabled,
         disabled: true,
       },
 
       {
-        title: 'item_label',
+        title: 'experiment-19',
         path: '#label',
         icon: ICONS.label,
         info: (
@@ -228,19 +229,19 @@ const navConfig = [
         ),
       },
       {
-        title: 'item_caption',
+        title: 'experiment-20',
         path: '#caption',
         icon: ICONS.menuItem,
         caption:
           'Quisque malesuada placerat nisl. In hac habitasse platea dictumst. Cras id dui. Pellentesque commodo eros a enim. Morbi mollis tellus ac sapien.',
       },
       {
-        title: 'item_external_link',
+        title: 'experiment-21',
         path: 'https://www.google.com/',
         icon: ICONS.external,
       },
       {
-        title: 'blank',
+        title: 'experiment-22',
         path: PATH_DASHBOARD.blank,
         icon: ICONS.blank,
       },
